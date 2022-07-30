@@ -1,11 +1,9 @@
 process TBPROFILER_LOAD_DATABASE {
+    debug true
 
     input:
         val(randomNumber)
         path(resistanceDb)
-
-    output:
-        path("results/*")
 
     script:
         def optionalDb  = resistanceDb ? "--db ${resistanceDb.name}" : ""
@@ -13,6 +11,10 @@ process TBPROFILER_LOAD_DATABASE {
         def optionallyLoadLibraryForContainers = (optionalDb != "") ? "cd ${resistanceDb}; ${params.tbprofiler_path} load_library ${resistanceDb.name}; cd ../" : ""
 
         """
+
+        which ${params.tbprofiler_path}
+        ${params.tbprofiler_path} version
+
         ${optionallyLoadLibraryForContainers}
 
         """
